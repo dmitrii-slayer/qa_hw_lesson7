@@ -2,22 +2,24 @@ package guru.qa;
 
 import com.codeborne.selenide.CollectionCondition;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
 import java.util.stream.Stream;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
-import static com.codeborne.selenide.Selenide.$$;
-import static com.codeborne.selenide.Selenide.open;
+import static com.codeborne.selenide.Selectors.byText;
+import static com.codeborne.selenide.Selenide.*;
 
 public class MegafonTests {
-    @BeforeAll
-    static void setUp() {
+    @BeforeEach
+    void setUp() {
         open("https://www.megafon.ru/");
     }
 
@@ -33,12 +35,29 @@ public class MegafonTests {
     }
 
     @MethodSource
-    @ParameterizedTest(name = "Проверка наличия заголовков из списка {1} на сайте Мегафона в выпадающем списке {0}")
-    @Tag("BLOCKER")
+    @ParameterizedTest(name = "Проверка наличия заголовков из списка {1} на сайте Мегафона в выпадающем меню {0}")
     void megafonDropdownMenuTest(String dropdownMenu, List<String> headings) {
 //        $$(".ch-platform-menu-item__inner").find(text(dropdownMenu)).hover();
         $$(".ch-platform-menu__container li").find(text(dropdownMenu)).hover();
         $$(".ch-platform-menu-drop-sections h3").filter(visible)
                 .shouldHave(CollectionCondition.texts(headings));
+    }
+
+
+    @ValueSource(strings = {
+            "Алтайский край",
+            "Москва и область",
+            "Ханты-Мансийский АО"
+    })
+    @ParameterizedTest(name = "Проверка возможности выбора региона {0}")
+    void megafonSelectRegionTest(String region) {
+        $(".ch-region__trigger").click();
+        $(".ch-region-popup__regions").$(byText(region)).scrollIntoView(true).click();
+        $(".ch-header__section_type_region").shouldHave(text(region));
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
