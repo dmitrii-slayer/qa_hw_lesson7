@@ -1,9 +1,9 @@
 package guru.qa;
 
 import com.codeborne.selenide.CollectionCondition;
+import com.codeborne.selenide.Configuration;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -18,6 +18,11 @@ import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 
 public class MegafonTests {
+    @BeforeAll
+    static void configure() {
+        Configuration.browserSize = "1920x1080";
+    }
+
     @BeforeEach
     void setUp() {
         open("https://www.megafon.ru/");
@@ -51,8 +56,11 @@ public class MegafonTests {
     })
     @ParameterizedTest(name = "Проверка возможности выбора региона {0}")
     void megafonSelectRegionTest(String region) {
+        // в углу страницы нажимаем на регион
         $(".ch-region__trigger").click();
+        // в списке регионов находим нужный нам регион и кликаем на него
         $(".ch-region-popup__regions").$(byText(region)).scrollIntoView(true).click();
+        // проверяем что регион сменился на выбранный нами
         $(".ch-header__section_type_region").shouldHave(text(region));
         try {
             Thread.sleep(3000);
