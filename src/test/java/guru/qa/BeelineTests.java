@@ -24,7 +24,7 @@ public class BeelineTests {
     @ParameterizedTest(name = "Проверка фильтрации телефонов по производителю {0}")
     void beelinePhoneBrandFilterCsvTest(String brand) {
         open("shop/catalog/telefony/smartfony/");
-        // выбираем производителья в фильтре
+        // выбираем производителя в фильтре
         $(byText(brand)).parent().click();
 //        executeJavaScript("$('.flocktory-widget').remove()");
 //        $(".filtersWrapper")
