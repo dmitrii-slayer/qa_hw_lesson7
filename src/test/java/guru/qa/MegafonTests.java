@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -62,10 +63,17 @@ public class MegafonTests {
         $(".ch-region-popup__regions").$(byText(region)).scrollIntoView(true).click();
         // проверяем что регион сменился на выбранный нами
         $(".ch-header__section_type_region").shouldHave(text(region));
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+//        Thread.sleep(3000);
     }
+
+
+//    Сервер мегафона блокирует запрос, тест заброшен
+//    @CsvSource(value = {
+//            "Apple", "Xiaomi", "Samsung"
+//    })
+//    @ParameterizedTest(name = "Проверка фильтрации телефонов по производителю {0}")
+//    void megafonPhoneBrandFilterTest(String brand) {
+//        $(".ch-service-menu-desktop__list").$(byText("Интернет-магазин")).click();
+//        $("a[href=/mobile]").click();
+//    }
 }
